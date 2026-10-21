@@ -1,0 +1,68 @@
+{
+  "Atelectasis": {
+    "Sensitivity": 1.0,
+    "Specificity": 0.6667,
+    "Precision": 0.4286,
+    "F1_Score": 0.6,
+    "ROC_AUC": 0.9444,
+    "TP": 3,
+    "FP": 4,
+    "TN": 8,
+    "FN": 0
+  },
+  "Cardiomegaly": {
+    "Sensitivity": 1.0,
+    "Specificity": 1.0,
+    "Precision": 1.0,
+    "F1_Score": 1.0,
+    "ROC_AUC": 1.0,
+    "TP": 4,
+    "FP": 0,
+    "TN": 11,
+    "FN": 0
+  },
+  "Effusion": {
+    "Sensitivity": 0.6667,
+    "Specificity": 0.9167,
+    "Precision": 0.6667,
+    "F1_Score": 0.6667,
+    "ROC_AUC": 0.9444,
+    "TP": 2,
+    "FP": 1,
+    "TN": 11,
+    "FN": 1
+  },
+  "Infiltration": {
+    "Sensitivity": 1.0,
+    "Specificity": 0.4615,
+    "Precision": 0.2222,
+    "F1_Score": 0.3636,
+    "ROC_AUC": 1.0,
+    "TP": 2,
+    "FP": 7,
+    "TN": 6,
+    "FN": 0
+  },
+  "Pneumothorax": {
+    "Sensitivity": 1.0,
+    "Specificity": 0.6923,
+    "Precision": 0.3333,
+    "F1_Score": 0.5,
+    "ROC_AUC": 0.7308,
+    "TP": 2,
+    "FP": 4,
+    "TN": 9,
+    "FN": 0
+  },
+  "Normal": {
+    "Sensitivity": 1.0,
+    "Specificity": 0.8182,
+    "Precision": 0.6667,
+    "F1_Score": 0.8,
+    "ROC_AUC": 0.9091,
+    "TP": 4,
+    "FP": 2,
+    "TN": 9,
+    "FN": 0
+  }
+}

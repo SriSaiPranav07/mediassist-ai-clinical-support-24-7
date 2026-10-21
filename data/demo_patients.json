@@ -1,0 +1,184 @@
+[
+  {
+    "id": "PT-101",
+    "name": "Rajesh Kumar (Demo)",
+    "age": 58,
+    "sex": "Male",
+    "chief_complaint": "Experiencing severe crushing chest pain radiating to left arm and jaw for the past 45 minutes with cold diaphoresis and nausea.",
+    "duration_days": 0.1,
+    "severity": 10,
+    "vitals": {
+      "HeartRate": 118,
+      "SpO2": 93,
+      "SystolicBP": 165,
+      "DiastolicBP": 98,
+      "RespiratoryRate": 24,
+      "Temperature": 36.8
+    },
+    "labs": {
+      "Troponin_I": {
+        "value": 1.45,
+        "unit": "ng/mL"
+      },
+      "Glucose": {
+        "value": 182,
+        "unit": "mg/dL"
+      },
+      "Potassium": {
+        "value": 4.1,
+        "unit": "mEq/L"
+      },
+      "Creatinine": {
+        "value": 1.2,
+        "unit": "mg/dL"
+      }
+    },
+    "xray_sample": "cardiomegaly_sample.png",
+    "expected_triage": "Emergency Warning",
+    "clinical_scenario": "Suspected Acute ST-Elevation Myocardial Infarction (STEMI)"
+  },
+  {
+    "id": "PT-102",
+    "name": "Priya Sharma (Demo)",
+    "age": 42,
+    "sex": "Female",
+    "chief_complaint": "High fever, productive cough with yellow sputum, and worsening shortness of breath for 4 days.",
+    "duration_days": 4.0,
+    "severity": 7,
+    "vitals": {
+      "HeartRate": 102,
+      "SpO2": 92,
+      "SystolicBP": 115,
+      "DiastolicBP": 75,
+      "RespiratoryRate": 26,
+      "Temperature": 38.9
+    },
+    "labs": {
+      "WBC": {
+        "value": 16.8,
+        "unit": "10^3/uL"
+      },
+      "Hemoglobin": {
+        "value": 13.0,
+        "unit": "g/dL"
+      },
+      "Sodium": {
+        "value": 136,
+        "unit": "mEq/L"
+      },
+      "Potassium": {
+        "value": 3.9,
+        "unit": "mEq/L"
+      }
+    },
+    "xray_sample": "infiltration_sample.png",
+    "expected_triage": "Urgent Assessment",
+    "clinical_scenario": "Community-Acquired Pneumonia with Secondary Hypoxemia"
+  },
+  {
+    "id": "PT-103",
+    "name": "Ananya Sen (Demo)",
+    "age": 29,
+    "sex": "Female",
+    "chief_complaint": "Mild intermittent dry cough and nasal congestion for 3 days. No breathing difficulty, chest pain, or high fever.",
+    "duration_days": 3.0,
+    "severity": 3,
+    "vitals": {
+      "HeartRate": 74,
+      "SpO2": 99,
+      "SystolicBP": 118,
+      "DiastolicBP": 78,
+      "RespiratoryRate": 14,
+      "Temperature": 37.0
+    },
+    "labs": {
+      "WBC": {
+        "value": 6.2,
+        "unit": "10^3/uL"
+      },
+      "Hemoglobin": {
+        "value": 13.5,
+        "unit": "g/dL"
+      },
+      "Platelets": {
+        "value": 240,
+        "unit": "10^3/uL"
+      }
+    },
+    "xray_sample": "normal_sample.png",
+    "expected_triage": "Routine Assessment",
+    "clinical_scenario": "Uncomplicated Upper Respiratory Tract Infection (URTI)"
+  },
+  {
+    "id": "PT-104",
+    "name": "Vikram Adani (Demo)",
+    "age": 64,
+    "sex": "Male",
+    "chief_complaint": "Sudden onset of right-sided arm weakness and mild facial droop noticed 30 minutes ago by spouse.",
+    "duration_days": 0.05,
+    "severity": 9,
+    "vitals": {
+      "HeartRate": 88,
+      "SpO2": 97,
+      "SystolicBP": 185,
+      "DiastolicBP": 105,
+      "RespiratoryRate": 18,
+      "Temperature": 36.9
+    },
+    "labs": {
+      "Glucose": {
+        "value": 140,
+        "unit": "mg/dL"
+      },
+      "Platelets": {
+        "value": 210,
+        "unit": "10^3/uL"
+      },
+      "Creatinine": {
+        "value": 1.1,
+        "unit": "mg/dL"
+      }
+    },
+    "xray_sample": "normal_sample.png",
+    "expected_triage": "Emergency Warning",
+    "clinical_scenario": "Suspected Acute Ischemic Stroke (FAST Positive)"
+  },
+  {
+    "id": "PT-105",
+    "name": "Meera Nair (Demo)",
+    "age": 51,
+    "sex": "Female",
+    "chief_complaint": "Generalized weakness, nausea, polyuria, and severe lethargy for 2 days.",
+    "duration_days": 2.0,
+    "severity": 8,
+    "vitals": {
+      "HeartRate": 112,
+      "SpO2": 96,
+      "SystolicBP": 95,
+      "DiastolicBP": 62,
+      "RespiratoryRate": 28,
+      "Temperature": 37.1
+    },
+    "labs": {
+      "Glucose": {
+        "value": 465,
+        "unit": "mg/dL"
+      },
+      "Potassium": {
+        "value": 5.8,
+        "unit": "mEq/L"
+      },
+      "Sodium": {
+        "value": 128,
+        "unit": "mEq/L"
+      },
+      "Creatinine": {
+        "value": 2.1,
+        "unit": "mg/dL"
+      }
+    },
+    "xray_sample": "normal_sample.png",
+    "expected_triage": "Urgent Assessment",
+    "clinical_scenario": "Severe Hyperglycemia / Impending Diabetic Ketoacidosis (DKA)"
+  }
+]
