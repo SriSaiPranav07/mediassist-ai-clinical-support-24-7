@@ -1,0 +1,65 @@
+[
+  {
+    "id": "GL-STEMI-001",
+    "topic": "Acute Coronary Syndromes / STEMI",
+    "source": "AHA/ACC Clinical Practice Guidelines for Management of STEMI",
+    "year": 2023,
+    "keywords": ["chest pain", "chest pressure", "radiating to left arm", "jaw", "sweating", "diaphoresis", "stemi", "myocardial infarction", "troponin"],
+    "summary": "Patients presenting with ischemic symptoms such as crushing substernal chest pain, pressure radiating to the arm, neck, or jaw accompanied by diaphoresis and dyspnea must be evaluated immediately. An emergent 12-lead ECG should be acquired within 10 minutes. Primary percutaneous coronary intervention (PCI) is the preferred reperfusion strategy if door-to-balloon time is under 90 minutes. High-sensitivity cardiac troponin testing and emergency cardiovascular consult are mandated.",
+    "recommendation": "Class I (Level A): Emergent triage to acute cardiac resuscitation suite, continuous ECG telemetry, aspirin 325 mg orally chewed, sublingual nitroglycerin if systolic BP > 90 mmHg, and immediate cardiology activation."
+  },
+  {
+    "id": "GL-STROKE-002",
+    "topic": "Acute Ischemic Stroke",
+    "source": "AHA/ASA Guidelines for the Early Management of Patients with Acute Ischemic Stroke",
+    "year": 2022,
+    "keywords": ["facial droop", "arm weakness", "slurred speech", "hemiparesis", "aphasia", "stroke", "neurologic deficit", "sudden weakness"],
+    "summary": "Acute onset of focal neurologic deficits including unilateral facial droop, arm or leg weakness, speech impairment, or acute ataxia represents an emergency acute ischemic stroke until proven otherwise. Immediate non-contrast cranial CT or MRI is required to rule out intracranial hemorrhage. Intravenous thrombolysis (alteplase or tenecteplase) is indicated within 4.5 hours of symptom onset if no contraindications exist.",
+    "recommendation": "Class I (Level A): Activate acute stroke code protocol, secure airway, obtain blood glucose stat to exclude hypoglycemia, maintain SpO2 >= 94%, avoid rapid blood pressure reduction unless > 220/120 mmHg, and transfer for immediate neurovascular imaging."
+  },
+  {
+    "id": "GL-PNEUMONIA-003",
+    "topic": "Community-Acquired Pneumonia (CAP)",
+    "source": "ATS/IDSA Clinical Practice Guideline on Community-Acquired Pneumonia",
+    "year": 2021,
+    "keywords": ["fever", "cough", "yellow phlegm", "purulent sputum", "pleuritic pain", "dyspnea", "infiltrate", "consolidation", "pneumonia"],
+    "summary": "Adults presenting with fever, productive cough, purulent sputum, and pleuritic chest discomfort should undergo chest radiography to confirm parenchymal pulmonary infiltrates or consolidation. Risk stratification using CURB-65 or Pneumonia Severity Index (PSI) determines ambulatory vs. inpatient admission requirements. Elevated WBC count and localized radiographic infiltrates corroborate bacterial lower respiratory tract infection.",
+    "recommendation": "Empiric antimicrobial therapy initiated within 4 hours of diagnosis: combination of beta-lactam plus macrolide or respiratory fluoroquinolone. Supplemental oxygen titrated to achieve SpO2 >= 92%."
+  },
+  {
+    "id": "GL-DKA-004",
+    "topic": "Diabetic Ketoacidosis & Hyperglycemic Crises",
+    "source": "American Diabetes Association (ADA) Standards of Medical Care in Diabetes",
+    "year": 2024,
+    "keywords": ["hyperglycemia", "glucose", "ketones", "dka", "thirst", "polyuria", "fruity breath", "potassium", "hyperkalemia", "hypokalemia", "anion gap"],
+    "summary": "Diabetic ketoacidosis (DKA) is characterized by the triad of hyperglycemia (blood glucose > 250 mg/dL), metabolic acidosis (arterial pH < 7.30, serum bicarbonate < 18 mEq/L), and elevated serum/urine ketones. Serum potassium must be evaluated before initiating intravenous insulin therapy. If potassium is < 3.3 mEq/L, insulin must be withheld and potassium repleted to avoid fatal cardiac arrhythmias.",
+    "recommendation": "Immediate aggressive isotonic saline rehydration (1.0 - 1.5 L/hr), hourly plasma glucose monitoring, and continuous IV regular insulin infusion (0.1 units/kg/hr) once potassium >= 3.3 mEq/L. Identify and treat underlying precipitating triggers (infection, myocardial infarction)."
+  },
+  {
+    "id": "GL-LAB-005",
+    "topic": "Critical Laboratory Value Protocol",
+    "source": "College of American Pathologists (CAP) & Tietz Clinical Guide to Laboratory Tests",
+    "year": 2023,
+    "keywords": ["critical value", "panic value", "potassium", "hyperkalemia", "hypokalemia", "creatinine", "platelets", "severe thrombocytopenia", "leukocytosis"],
+    "summary": "Laboratory critical (panic) values represent pathophysiology so markedly outside reference intervals as to be immediately life-threatening. Mandatory stat telephone notification of the attending clinician is required within 15 minutes. Key critical panic thresholds: Potassium < 2.8 or > 6.2 mEq/L (arrhythmia risk), Glucose < 50 or > 400 mg/dL, Platelets < 20 x10^3/uL (spontaneous hemorrhage risk), Hemoglobin < 7.0 g/dL (acute ischemic hypoxemia).",
+    "recommendation": "Repeat stat specimen verification, continuous cardiac rhythm monitoring for dyskalemias, repeat vital signs, and immediate bedside physician intervention."
+  },
+  {
+    "id": "GL-XRAY-006",
+    "topic": "Pneumothorax and Pleural Effusion Management",
+    "source": "British Thoracic Society (BTS) Pleural Disease Guideline",
+    "year": 2023,
+    "keywords": ["pneumothorax", "pleural effusion", "atelectasis", "cardiomegaly", "blunted costophrenic angle", "visceral pleural line", "dyspnea"],
+    "summary": "Radiographic evidence of a visible visceral pleural line with absent peripheral lung markings indicates pneumothorax. Large or tension pneumothorax accompanied by hemodynamic instability requires immediate emergent needle decompression or tube thoracostomy. Blunting of the costophrenic sulcus indicates pleural effusion (> 200 mL), necessitating diagnostic thoracentesis to differentiate transudative vs. exudative etiologies.",
+    "recommendation": "Urgent bedside upright PA chest radiograph. High-flow supplemental oxygen (10-15 L/min). Immediate surgical or pulmonary consultation for intervention if symptomatic or lung collapse > 2 cm."
+  },
+  {
+    "id": "GL-ROUTINE-007",
+    "topic": "Viral Upper Respiratory Infections (Common Cold)",
+    "source": "CDC Clinical Practice Guidance for Upper Respiratory Infections",
+    "year": 2024,
+    "keywords": ["rhinovirus", "mild cough", "runny nose", "sneezing", "congestion", "sore throat", "low grade fever", "routine"],
+    "summary": "Uncomplicated acute viral upper respiratory tract infections present with mild nasal congestion, rhinorrhea, sneezing, and low-grade fever. Routine antimicrobial therapy provides no benefit and contributes to antibiotic resistance. Patients should be reassured, given symptomatic supportive therapy (hydration, saline nasal spray, acetaminophen/ibuprofen), and advised on red-flag warning signs.",
+    "recommendation": "Symptomatic ambulatory management, oral hydration, rest, and routine follow-up with primary care physician if symptoms persist beyond 10-14 days or if high fever and dyspnea develop."
+  }
+]

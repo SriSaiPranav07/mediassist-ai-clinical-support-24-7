@@ -47,10 +47,10 @@ def set_lab_case(case_id_or_custom: str):
                 val = labs.get(t_name, {}).get("value", "")
                 st.session_state[f"lab_val_{t_name}"] = str(val) if val != "" else ""
 
-# Initialize default to PT-003 (DKA / Critical Labs)
+# Initialize default to PT-105 (DKA / Critical Labs) — blank slate on first load
 if "lab_val_Glucose" not in st.session_state:
-    set_lab_case("PT-003")
-    st.session_state["selected_lab_demo"] = f"{DEMO_PATIENTS[2]['id']} — {DEMO_PATIENTS[2]['clinical_scenario']}"
+    set_lab_case("Custom")
+    st.session_state["selected_lab_demo"] = "Custom Entry (Blank)"
 
 st.markdown("#### ⚡ Quick Demonstration Laboratory Panels")
 st.write("Click any quick preset or select a specific patient laboratory requisition:")
@@ -58,19 +58,19 @@ st.write("Click any quick preset or select a specific patient laboratory requisi
 # Quick Presets
 c1, c2, c3, c4 = st.columns(4)
 with c1:
-    if st.button("🚨 Critical DKA (Glucose 480, K 6.4)", use_container_width=True):
-        set_lab_case("PT-003")
-        st.session_state["selected_lab_demo"] = f"{DEMO_PATIENTS[2]['id']} — {DEMO_PATIENTS[2]['clinical_scenario']}"
+    if st.button("🚨 Critical DKA (Glucose 465, K 5.8)", use_container_width=True):
+        set_lab_case("PT-105")
+        st.session_state["selected_lab_demo"] = f"{DEMO_PATIENTS[4]['id']} — {DEMO_PATIENTS[4]['clinical_scenario']}"
         st.rerun()
 with c2:
-    if st.button("⚠️ Acute Renal / Sepsis (PT-002)", use_container_width=True):
-        set_lab_case("PT-002")
-        st.session_state["selected_lab_demo"] = f"{DEMO_PATIENTS[1]['id']} — {DEMO_PATIENTS[1]['clinical_scenario']}"
+    if st.button("⚠️ STEMI Labs (Troponin 1.45)", use_container_width=True):
+        set_lab_case("PT-101")
+        st.session_state["selected_lab_demo"] = f"{DEMO_PATIENTS[0]['id']} — {DEMO_PATIENTS[0]['clinical_scenario']}"
         st.rerun()
 with c3:
-    if st.button("🟢 Normal Ambulatory (PT-004)", use_container_width=True):
-        set_lab_case("PT-004")
-        st.session_state["selected_lab_demo"] = f"{DEMO_PATIENTS[3]['id']} — {DEMO_PATIENTS[3]['clinical_scenario']}"
+    if st.button("🟢 Normal / Mild URTI (PT-103)", use_container_width=True):
+        set_lab_case("PT-103")
+        st.session_state["selected_lab_demo"] = f"{DEMO_PATIENTS[2]['id']} — {DEMO_PATIENTS[2]['clinical_scenario']}"
         st.rerun()
 with c4:
     if st.button("✍️ Custom / Clear Labs", use_container_width=True):

@@ -53,10 +53,10 @@ def set_triage_case(pt_id_or_custom: str):
             st.session_state["triage_bp"] = int(v.get("SystolicBP", 120))
             st.session_state["include_vitals"] = bool(v)
 
-# Initialize session state on first load
+# Initialize session state on first load — blank slate so page does NOT auto-evaluate
 if "triage_narrative" not in st.session_state:
-    set_triage_case("PT-001")
-    st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[0]['id']} — {DEMO_PATIENTS[0]['clinical_scenario']}"
+    set_triage_case("Custom")
+    st.session_state["selected_demo_case"] = "Custom Input (Blank)"
 
 st.markdown("#### ⚡ Quick Demonstration Clinical Scenarios")
 st.write("Click any quick preset or type custom symptoms below:")
@@ -65,23 +65,23 @@ st.write("Click any quick preset or type custom symptoms below:")
 btn_col1, btn_col2, btn_col3, btn_col4, btn_col5 = st.columns(5)
 with btn_col1:
     if st.button("🚨 STEMI / Heart Attack", use_container_width=True, help="Load 58yo male with acute crushing chest pressure"):
-        set_triage_case("PT-001")
+        set_triage_case("PT-101")
         st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[0]['id']} — {DEMO_PATIENTS[0]['clinical_scenario']}"
         st.rerun()
 with btn_col2:
-    if st.button("🧠 Acute Stroke", use_container_width=True, help="Load 67yo female with unilateral weakness and slurred speech"):
-        set_triage_case("PT-005")
-        st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[4]['id']} — {DEMO_PATIENTS[4]['clinical_scenario']}"
+    if st.button("🧠 Acute Stroke", use_container_width=True, help="Load 64yo male with right arm weakness"):
+        set_triage_case("PT-104")
+        st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[3]['id']} — {DEMO_PATIENTS[3]['clinical_scenario']}"
         st.rerun()
 with btn_col3:
     if st.button("🫁 Severe Pneumonia", use_container_width=True, help="Load 42yo female with high fever and productive cough"):
-        set_triage_case("PT-002")
+        set_triage_case("PT-102")
         st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[1]['id']} — {DEMO_PATIENTS[1]['clinical_scenario']}"
         st.rerun()
 with btn_col4:
-    if st.button("🤧 Viral Cold (Routine)", use_container_width=True, help="Load 24yo male with mild runny nose and cough"):
-        set_triage_case("PT-004")
-        st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[3]['id']} — {DEMO_PATIENTS[3]['clinical_scenario']}"
+    if st.button("🤧 Viral Cold (Routine)", use_container_width=True, help="Load 29yo female with mild cold"):
+        set_triage_case("PT-103")
+        st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[2]['id']} — {DEMO_PATIENTS[2]['clinical_scenario']}"
         st.rerun()
 with btn_col5:
     if st.button("✍️ Custom / Clear", use_container_width=True, help="Clear inputs for manual typing"):
@@ -97,6 +97,7 @@ def on_dropdown_change():
     if selected == "Custom Input (Blank)":
         set_triage_case("Custom")
     else:
+        # IDs in src/utils.py are PT-101..PT-105
         case_id = selected.split(" — ")[0]
         set_triage_case(case_id)
 
@@ -180,8 +181,8 @@ with st.expander("➕ Physiological Vital Signs (Optional — Enable only if mea
 
 run_button = st.button("Run Triage Screening 🔍", type="primary", use_container_width=False)
 
-# Evaluation trigger: run if button clicked or if narrative is non-empty
-if run_button or (chief_complaint and chief_complaint.strip()):
+# Only evaluate when the user explicitly clicks the button — never auto-run on page load
+if run_button:
     if not chief_complaint or not chief_complaint.strip():
         st.warning("⚠️ Please provide a symptom description or click one of the quick scenario buttons above.")
     else:
