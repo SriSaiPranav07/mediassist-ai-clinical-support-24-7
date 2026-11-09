@@ -278,7 +278,6 @@ with st.sidebar:
         flush_session_data()
         
     st.markdown("---")
-    st.caption("© 2026 Zelvora Technologies. Educational & Research Demonstration Only.")
 
 
 # ==============================================================================
