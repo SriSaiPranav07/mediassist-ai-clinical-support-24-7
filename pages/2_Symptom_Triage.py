@@ -209,6 +209,10 @@ if run_button:
         elif urgency == "Routine Assessment":
             st.success(f"### 🟢 Urgency Category: {urgency}")
             st.write(f"**Clinical Advisory:** {result['action_advisory']}")
+        elif urgency in ["Requires More Information", "Insufficient Information"]:
+            st.info(f"### ❓ Triage Status: {urgency.upper()}")
+            st.warning(f"⚠️ **Clinical Advisory (Low Model Confidence):** {result['action_advisory']}")
+            st.caption("💡 The calibrated model confidence is below the diagnostic threshold (50%). Rather than forcing an inaccurate classification, further clinical inquiry, vital sign monitoring, or symptom duration assessment is advised.")
         else:
             st.info(f"### ℹ️ Urgency Category: {urgency}")
             st.write(f"**Advisory:** {result['action_advisory']}")

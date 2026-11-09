@@ -1,14 +1,20 @@
 """
 MediAssist - Symptom Triage NLP Training Pipeline
 Author: Zelvora Industry Labs / MediAssist Team
-Trains a Calibrated TF-IDF Classifier on clinical symptom presentations.
+
+Enhanced Training Pipeline:
+  - Balanced dataset across Emergency Warning, Urgent Assessment, and Routine Assessment.
+  - Class balancing via `class_weight='balanced'` to prevent model skew towards higher urgency.
+  - Probability calibration via `CalibratedClassifierCV(estimator=base_clf, method='sigmoid', cv=3)`
+    producing reliable posterior probabilities.
+  - Compatible with LIME text explainability (LimeTextExplainer).
 """
 import json
 from pathlib import Path
 import pandas as pd
 import numpy as np
 import joblib
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_predict
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.calibration import CalibratedClassifierCV
@@ -28,9 +34,9 @@ from src.config import (
 )
 from src.evaluation import calculate_classification_metrics
 
-# Curated Clinical Triage Presentations across three urgency categories
+# Curated Clinical Triage Presentations (balanced across all three classes)
 CLINICAL_TRIAGE_RECORDS = [
-    # EMERGENCY WARNING
+    # ── EMERGENCY WARNING ───────────────────────────────────────────────────
     ("Crushing substernal chest pain radiating to left arm and jaw with profuse cold sweating", TRIAGE_EMERGENCY),
     ("Severe pressure in center of chest with shortness of breath and dizziness", TRIAGE_EMERGENCY),
     ("Sudden onset of right-sided arm and leg weakness with facial drooping and slurred speech", TRIAGE_EMERGENCY),
@@ -45,14 +51,18 @@ CLINICAL_TRIAGE_RECORDS = [
     ("Sudden loss of vision in right eye with severe facial weakness and hemiparesis", TRIAGE_EMERGENCY),
     ("Infant presenting with limpness, cyanosis around lips, and difficulty breathing", TRIAGE_EMERGENCY),
     ("Stabbing retrosternal chest pain with syncope and cold clammy diaphoresis", TRIAGE_EMERGENCY),
-    ("Acute acute dyspnea, choking sensation, and inability to swallow saliva", TRIAGE_EMERGENCY),
+    ("Acute dyspnea, choking sensation, and inability to swallow saliva", TRIAGE_EMERGENCY),
     ("Sudden complete weakness in left extremities and inability to speak coherently", TRIAGE_EMERGENCY),
     ("Massive gastrointestinal bleeding with syncope and profound hypotension", TRIAGE_EMERGENCY),
     ("Severe burning chest pain radiating to left shoulder with shortness of breath and nausea", TRIAGE_EMERGENCY),
     ("Sudden respiratory failure with SpO2 dropping to 82% and cyanosis", TRIAGE_EMERGENCY),
     ("Unconscious adult found after cardiac arrest with agonal breathing", TRIAGE_EMERGENCY),
+    ("Active generalized seizure lasting more than 5 minutes without regaining consciousness", TRIAGE_EMERGENCY),
+    ("Acute acute pulmonary edema: pink frothy sputum, orthopnea, extreme respiratory distress", TRIAGE_EMERGENCY),
+    ("Severe stabbing chest pain tearing through to back with pulse differential", TRIAGE_EMERGENCY),
+    ("Comatose patient with unequal pupils and decerebrate posturing after head strike", TRIAGE_EMERGENCY),
 
-    # URGENT ASSESSMENT
+    # ── URGENT ASSESSMENT ───────────────────────────────────────────────────
     ("High fever of 39 C for 3 days with productive cough, yellow phlegm, and localized pleuritic pain", TRIAGE_URGENT),
     ("Persistent severe lower right abdominal pain worsening over 12 hours with nausea and vomiting", TRIAGE_URGENT),
     ("Acute painful swollen red left calf after long flight with mild shortness of breath", TRIAGE_URGENT),
@@ -73,8 +83,12 @@ CLINICAL_TRIAGE_RECORDS = [
     ("Palpitations lasting 2 hours with lightheadedness and pulse rate around 130 bpm", TRIAGE_URGENT),
     ("Severe localized right upper quadrant abdominal pain triggered after fatty meal", TRIAGE_URGENT),
     ("High fever, neck soreness, and body aches in returning international traveler", TRIAGE_URGENT),
+    ("Persistent productive cough with green sputum, fever 38.5 C, and chills for 4 days", TRIAGE_URGENT),
+    ("Severe throat pain with difficulty swallowing liquids, trismus, and hot potato voice", TRIAGE_URGENT),
+    ("Swollen hot tender knee joint with inability to flex or bear weight", TRIAGE_URGENT),
+    ("Persistent vomiting for 24 hours unable to keep water down with dark concentrated urine", TRIAGE_URGENT),
 
-    # ROUTINE ASSESSMENT
+    # ── ROUTINE ASSESSMENT ──────────────────────────────────────────────────
     ("Mild dry cough and runny nose for 4 days with occasional sneezing and low grade fever 37.4 C", TRIAGE_ROUTINE),
     ("Sore throat and itchy watery eyes with clear nasal discharge consistent with seasonal allergy", TRIAGE_ROUTINE),
     ("Chronic lower back dull ache for 6 months, worse after prolonged sitting, no radiation", TRIAGE_ROUTINE),
@@ -94,13 +108,18 @@ CLINICAL_TRIAGE_RECORDS = [
     ("Mild occasional heartburn relieved by over-the-counter antacid tablets", TRIAGE_ROUTINE),
     ("Small painless benign-appearing skin tag on neck requesting cosmetic removal", TRIAGE_ROUTINE),
     ("Mild dandruff and dry scalp itching without hair loss or skin lesions", TRIAGE_ROUTINE),
-    ("Routine check of blood pressure, currently asymptomatic and feeling healthy", TRIAGE_ROUTINE)
+    ("Routine check of blood pressure, currently asymptomatic and feeling healthy", TRIAGE_ROUTINE),
+    ("Mild tiredness after long study session, sleeping 7 hours, appetite normal", TRIAGE_ROUTINE),
+    ("Occasional mild belching after meals, no abdominal pain, normal bowel movements", TRIAGE_ROUTINE),
+    ("Mild dry skin on hands from frequent handwashing in winter", TRIAGE_ROUTINE),
+    ("Minor bruise on thigh after bumping into coffee table yesterday, not enlarging", TRIAGE_ROUTINE)
 ]
 
+
 def train_and_evaluate_triage():
-    print("=" * 60)
-    print("MediAssist: Training NLP Symptom Triage Model")
-    print("=" * 60)
+    print("=" * 65)
+    print("MediAssist: Training NLP Symptom Triage Model with Calibration & Class Balancing")
+    print("=" * 65)
 
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
     DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -112,7 +131,7 @@ def train_and_evaluate_triage():
     df.to_csv(csv_path, index=False)
     print(f"Dataset saved to: {csv_path} (Total samples: {len(df)})")
     print("Class Distribution:")
-    print(df["urgency_category"].value_counts())
+    print(df["urgency_category"].value_counts().to_string())
 
     # Stratified train-test split
     X_train, X_test, y_train, y_test = train_test_split(
@@ -126,7 +145,7 @@ def train_and_evaluate_triage():
     # Feature extraction: TF-IDF with unigrams and bigrams
     vectorizer = TfidfVectorizer(
         ngram_range=(1, 2),
-        max_features=250,
+        max_features=300,
         sublinear_tf=True,
         stop_words="english"
     )
@@ -135,13 +154,14 @@ def train_and_evaluate_triage():
 
     # Base Logistic Regression with balanced class weights
     base_clf = LogisticRegression(
-        C=1.5,
+        C=2.0,
         class_weight="balanced",
-        max_iter=500,
+        max_iter=1000,
         random_state=42
     )
 
-    # Calibrated Classifier for accurate clinical probabilities
+    # Calibrated Classifier for accurate, calibrated clinical posterior probabilities
+    # Uses 3-fold cross-validation with Platt scaling (sigmoid)
     calibrated_clf = CalibratedClassifierCV(estimator=base_clf, method="sigmoid", cv=3)
     calibrated_clf.fit(X_train_vec, y_train)
 
@@ -164,6 +184,8 @@ def train_and_evaluate_triage():
     print(f"Macro Precision:   {metrics['Precision_Macro'] * 100:.2f}%")
     print(f"Macro F1-Score:    {metrics['F1_Macro'] * 100:.2f}%")
     print(f"Macro ROC-AUC:     {metrics['ROC_AUC_Macro']}")
+    print("\nClassification Report:")
+    print(classification_report(y_test, y_pred))
 
     # Save model artifacts
     joblib.dump(calibrated_clf, TRIAGE_MODEL_PATH)
@@ -178,6 +200,7 @@ def train_and_evaluate_triage():
     print(f"Evaluation report written to: {metrics_path}")
 
     return metrics
+
 
 if __name__ == "__main__":
     train_and_evaluate_triage()

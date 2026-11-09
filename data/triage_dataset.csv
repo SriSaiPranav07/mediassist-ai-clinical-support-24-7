@@ -13,12 +13,16 @@ Severe central chest tightness with radiating pain to neck and impending sense o
 Sudden loss of vision in right eye with severe facial weakness and hemiparesis,Emergency Warning
 "Infant presenting with limpness, cyanosis around lips, and difficulty breathing",Emergency Warning
 Stabbing retrosternal chest pain with syncope and cold clammy diaphoresis,Emergency Warning
-"Acute acute dyspnea, choking sensation, and inability to swallow saliva",Emergency Warning
+"Acute dyspnea, choking sensation, and inability to swallow saliva",Emergency Warning
 Sudden complete weakness in left extremities and inability to speak coherently,Emergency Warning
 Massive gastrointestinal bleeding with syncope and profound hypotension,Emergency Warning
 Severe burning chest pain radiating to left shoulder with shortness of breath and nausea,Emergency Warning
 Sudden respiratory failure with SpO2 dropping to 82% and cyanosis,Emergency Warning
 Unconscious adult found after cardiac arrest with agonal breathing,Emergency Warning
+Active generalized seizure lasting more than 5 minutes without regaining consciousness,Emergency Warning
+"Acute acute pulmonary edema: pink frothy sputum, orthopnea, extreme respiratory distress",Emergency Warning
+Severe stabbing chest pain tearing through to back with pulse differential,Emergency Warning
+Comatose patient with unequal pupils and decerebrate posturing after head strike,Emergency Warning
 "High fever of 39 C for 3 days with productive cough, yellow phlegm, and localized pleuritic pain",Urgent Assessment
 Persistent severe lower right abdominal pain worsening over 12 hours with nausea and vomiting,Urgent Assessment
 Acute painful swollen red left calf after long flight with mild shortness of breath,Urgent Assessment
@@ -39,6 +43,10 @@ Persistent diarrhea and vomiting for 3 days with signs of moderate dehydration a
 Palpitations lasting 2 hours with lightheadedness and pulse rate around 130 bpm,Urgent Assessment
 Severe localized right upper quadrant abdominal pain triggered after fatty meal,Urgent Assessment
 "High fever, neck soreness, and body aches in returning international traveler",Urgent Assessment
+"Persistent productive cough with green sputum, fever 38.5 C, and chills for 4 days",Urgent Assessment
+"Severe throat pain with difficulty swallowing liquids, trismus, and hot potato voice",Urgent Assessment
+Swollen hot tender knee joint with inability to flex or bear weight,Urgent Assessment
+Persistent vomiting for 24 hours unable to keep water down with dark concentrated urine,Urgent Assessment
 Mild dry cough and runny nose for 4 days with occasional sneezing and low grade fever 37.4 C,Routine Assessment
 Sore throat and itchy watery eyes with clear nasal discharge consistent with seasonal allergy,Routine Assessment
 "Chronic lower back dull ache for 6 months, worse after prolonged sitting, no radiation",Routine Assessment
@@ -59,3 +67,7 @@ Mild occasional heartburn relieved by over-the-counter antacid tablets,Routine A
 Small painless benign-appearing skin tag on neck requesting cosmetic removal,Routine Assessment
 Mild dandruff and dry scalp itching without hair loss or skin lesions,Routine Assessment
 "Routine check of blood pressure, currently asymptomatic and feeling healthy",Routine Assessment
+"Mild tiredness after long study session, sleeping 7 hours, appetite normal",Routine Assessment
+"Occasional mild belching after meals, no abdominal pain, normal bowel movements",Routine Assessment
+Mild dry skin on hands from frequent handwashing in winter,Routine Assessment
+"Minor bruise on thigh after bumping into coffee table yesterday, not enlarging",Routine Assessment

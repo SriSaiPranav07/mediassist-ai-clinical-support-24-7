@@ -590,6 +590,10 @@ elif st.session_state["wizard_step"] == 3:
         elif urgency == "Routine Assessment":
             st.success(f"### 🟢 Urgency Category: {urgency}")
             st.write(f"**Action Advisory:** {triage_res['action_advisory']}")
+        elif urgency in ["Requires More Information", "Insufficient Information"]:
+            st.info(f"### ❓ Urgency Category: {urgency.upper()}")
+            st.warning(f"⚠️ **Clinical Advisory (Low Model Confidence):** {triage_res['action_advisory']}")
+            st.caption("💡 The calibrated model confidence is below the diagnostic threshold. Rather than forcing an inaccurate classification, MediAssist prompts for additional clinical inquiry, vital signs, or symptom progression details.")
         else:
             st.info(f"### ℹ️ Urgency Category: {urgency}")
             
