@@ -33,12 +33,13 @@ exp_engine = get_explainability_engine()
 def set_triage_case(pt_id_or_custom: str):
     if pt_id_or_custom == "Custom":
         st.session_state["triage_narrative"] = ""
-        st.session_state["triage_duration"] = 1.0
-        st.session_state["triage_severity"] = 5
-        st.session_state["triage_age"] = 40
-        st.session_state["triage_hr"] = 80
+        st.session_state["triage_duration"] = 2.0
+        st.session_state["triage_severity"] = 4
+        st.session_state["triage_age"] = 35
+        st.session_state["triage_hr"] = 75
         st.session_state["triage_spo2"] = 98
         st.session_state["triage_bp"] = 120
+        st.session_state["include_vitals"] = False
     else:
         pt = next((p for p in DEMO_PATIENTS if p["id"] == pt_id_or_custom), None)
         if pt:
@@ -47,17 +48,18 @@ def set_triage_case(pt_id_or_custom: str):
             st.session_state["triage_severity"] = int(pt["severity"])
             st.session_state["triage_age"] = int(pt["age"])
             v = pt.get("vitals", {})
-            st.session_state["triage_hr"] = int(v.get("HeartRate", 80))
+            st.session_state["triage_hr"] = int(v.get("HeartRate", 75))
             st.session_state["triage_spo2"] = int(v.get("SpO2", 98))
             st.session_state["triage_bp"] = int(v.get("SystolicBP", 120))
+            st.session_state["include_vitals"] = bool(v)
 
-# Initialize default to PT-001 so the page is ready with realistic clinical data
+# Initialize session state on first load
 if "triage_narrative" not in st.session_state:
     set_triage_case("PT-001")
     st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[0]['id']} — {DEMO_PATIENTS[0]['clinical_scenario']}"
 
 st.markdown("#### ⚡ Quick Demonstration Clinical Scenarios")
-st.write("Click any quick preset or choose from the full synthetic patient cohort:")
+st.write("Click any quick preset or type custom symptoms below:")
 
 # Quick Scenario Preset Buttons
 btn_col1, btn_col2, btn_col3, btn_col4, btn_col5 = st.columns(5)
@@ -77,7 +79,7 @@ with btn_col3:
         st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[1]['id']} — {DEMO_PATIENTS[1]['clinical_scenario']}"
         st.rerun()
 with btn_col4:
-    if st.button("🤧 Viral Rhinovirus", use_container_width=True, help="Load 24yo male with mild runny nose and cough"):
+    if st.button("🤧 Viral Cold (Routine)", use_container_width=True, help="Load 24yo male with mild runny nose and cough"):
         set_triage_case("PT-004")
         st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[3]['id']} — {DEMO_PATIENTS[3]['clinical_scenario']}"
         st.rerun()
@@ -113,25 +115,68 @@ col_input, col_meta = st.columns([3, 1])
 with col_input:
     chief_complaint = st.text_area(
         "Patient Chief Complaint / Symptom Narrative:",
-        key="triage_narrative",
+        value=st.session_state.get("triage_narrative", ""),
         height=140,
-        placeholder="Describe symptoms in plain clinical language (e.g., Patient describes severe chest pressure radiating to left arm with sweating for 1 hour...)"
+        placeholder="Type patient symptoms here (e.g. 'Mild headache after studying', 'High fever and productive cough', or 'Crushing central chest pain')..."
     )
 
 with col_meta:
-    duration_days = st.number_input("Duration (Days):", key="triage_duration", min_value=0.01, max_value=365.0, step=0.5)
-    severity_score = st.slider("Severity Scale (1-10):", key="triage_severity", min_value=1, max_value=10)
-    patient_age = st.number_input("Patient Age:", key="triage_age", min_value=0, max_value=120)
+    duration_days = st.number_input(
+        "Duration (Days):",
+        min_value=0.01,
+        max_value=365.0,
+        value=float(st.session_state.get("triage_duration", 2.0)),
+        step=0.5
+    )
+    severity_score = st.slider(
+        "Severity Scale (1-10):",
+        min_value=1,
+        max_value=10,
+        value=int(st.session_state.get("triage_severity", 4))
+    )
+    patient_age = st.number_input(
+        "Patient Age:",
+        min_value=0,
+        max_value=120,
+        value=int(st.session_state.get("triage_age", 35))
+    )
 
-# Optional Vitals
-with st.expander("➕ Physiological Vital Signs (for vital-sign red-flag detection)", expanded=True):
+# Optional Vitals - Only included if user explicitly enables it
+vitals_dict = None
+with st.expander("➕ Physiological Vital Signs (Optional — Enable only if measured)", expanded=st.session_state.get("include_vitals", False)):
+    enable_vitals = st.checkbox(
+        "Include vital signs in triage evaluation",
+        value=st.session_state.get("include_vitals", False)
+    )
+    
     c_hr, c_spo2, c_bp = st.columns(3)
     with c_hr:
-        v_hr = st.number_input("Heart Rate (bpm):", key="triage_hr", min_value=30, max_value=250)
+        v_hr = st.number_input(
+            "Heart Rate (bpm):",
+            min_value=30,
+            max_value=250,
+            value=int(st.session_state.get("triage_hr", 75)),
+            step=1
+        )
     with c_spo2:
-        v_spo2 = st.number_input("SpO2 (%):", key="triage_spo2", min_value=50, max_value=100)
+        v_spo2 = st.number_input(
+            "SpO2 (%):",
+            min_value=50,
+            max_value=100,
+            value=int(st.session_state.get("triage_spo2", 98)),
+            step=1
+        )
     with c_bp:
-        v_sys = st.number_input("Systolic BP (mmHg):", key="triage_bp", min_value=50, max_value=260)
+        v_sys = st.number_input(
+            "Systolic BP (mmHg):",
+            min_value=50,
+            max_value=260,
+            value=int(st.session_state.get("triage_bp", 120)),
+            step=1
+        )
+    
+    if enable_vitals:
+        vitals_dict = {"HeartRate": v_hr, "SpO2": v_spo2, "SystolicBP": v_sys}
 
 run_button = st.button("Run Triage Screening 🔍", type="primary", use_container_width=False)
 
@@ -140,7 +185,6 @@ if run_button or (chief_complaint and chief_complaint.strip()):
     if not chief_complaint or not chief_complaint.strip():
         st.warning("⚠️ Please provide a symptom description or click one of the quick scenario buttons above.")
     else:
-        vitals_dict = {"HeartRate": v_hr, "SpO2": v_spo2, "SystolicBP": v_sys}
         result = triage_engine.classify_symptoms(
             chief_complaint=chief_complaint,
             duration_days=duration_days,
