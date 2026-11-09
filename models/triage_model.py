@@ -2,11 +2,7 @@
 MediAssist - Symptom Triage Model & Safety Screening
 Author: Zelvora Industry Labs / MediAssist Team
 
-Provides the modular SymptomTriageModel with:
-  - Red flag keyword dictionary & regex patterns
-  - Feature engineering & numerical feature weighting
-  - Clinical heuristic guardrail (capping urgent/emergency for mild symptoms)
-  - Calibrated probability thresholding (triggers 'Requires More Information')
+Provides the modular SymptomTriageModel wrapping the Hybrid Clinical Triage Architecture.
 """
 from typing import Dict, Any, List, Optional
 from pathlib import Path
@@ -16,11 +12,7 @@ from src.config import (
     TRIAGE_MODEL_PATH,
     TRIAGE_VECTORIZER_PATH
 )
-from src.symptom_triage import (
-    predict_triage,
-    detect_red_flag_keywords,
-    extract_clinical_keywords
-)
+from src.symptom_triage import predict_triage
 
 
 class SymptomTriageModel:
@@ -47,12 +39,6 @@ class SymptomTriageModel:
             self.model = None
             self.vectorizer = None
 
-    def detect_red_flags(self, text: str) -> List[str]:
-        return detect_red_flag_keywords(text)
-
-    def extract_keywords(self, text: str) -> List[str]:
-        return extract_clinical_keywords(text)
-
     def predict(
         self,
         chief_complaint: str,
@@ -60,11 +46,14 @@ class SymptomTriageModel:
         severity_score: int = 5,
         patient_age: int = 35,
         vital_signs: Optional[Dict[str, Any]] = None,
+        comorbidities: Optional[List[str]] = None,
+        current_medications: Optional[str] = None,
+        symptom_trajectory: str = "Unchanged",
+        previous_episodes: str = "First time",
         confidence_threshold: float = 0.50
     ) -> Dict[str, Any]:
         """
-        Executes end-to-end triage prediction with feature weighting,
-        rule-based guardrails, and calibration thresholding.
+        Executes end-to-end hybrid triage prediction with clinical safety overrides.
         """
         return predict_triage(
             chief_complaint=chief_complaint,
@@ -72,6 +61,10 @@ class SymptomTriageModel:
             severity_score=severity_score,
             patient_age=patient_age,
             vital_signs=vital_signs,
+            comorbidities=comorbidities,
+            current_medications=current_medications,
+            symptom_trajectory=symptom_trajectory,
+            previous_episodes=previous_episodes,
             confidence_threshold=confidence_threshold,
             model=self.model,
             vectorizer=self.vectorizer
@@ -84,6 +77,10 @@ class SymptomTriageModel:
         severity_score: int = 5,
         patient_age: int = 35,
         vital_signs: Optional[Dict[str, Any]] = None,
+        comorbidities: Optional[List[str]] = None,
+        current_medications: Optional[str] = None,
+        symptom_trajectory: str = "Unchanged",
+        previous_episodes: str = "First time",
         confidence_threshold: float = 0.50
     ) -> Dict[str, Any]:
         """Alias for compatibility with earlier page callers."""
@@ -93,5 +90,9 @@ class SymptomTriageModel:
             severity_score=severity_score,
             patient_age=patient_age,
             vital_signs=vital_signs,
+            comorbidities=comorbidities,
+            current_medications=current_medications,
+            symptom_trajectory=symptom_trajectory,
+            previous_episodes=previous_episodes,
             confidence_threshold=confidence_threshold
         )

@@ -1,10 +1,11 @@
 """
-MediAssist - Explainability Center (LIME, SHAP, and Clinician Explanations)
+MediAssist - Explainability Center (LIME, SHAP, and AI Clinical Decision Support Summaries)
 Author: Zelvora Industry Labs / MediAssist Team
 """
 from typing import Dict, Any, List, Optional, Tuple
 import numpy as np
 import pandas as pd
+
 
 class ExplainabilityEngine:
     """
@@ -12,86 +13,181 @@ class ExplainabilityEngine:
     """
 
     @staticmethod
-    def format_10_second_explanation(finding: str, reason: str, confidence: str, limitation: str) -> str:
+    def format_clinical_summary(
+        finding: str,
+        reason: str,
+        confidence: str,
+        limitation: str,
+        missing_info: Optional[List[str]] = None
+    ) -> str:
         """
-        Formats clinician-ready 10-second summary according to capstone specification.
+        Formats structured AI-Generated Clinical Decision Support Summary.
         """
-        return (
+        base = (
             f"**Finding:** {finding}\n\n"
             f"**Reason:** {reason}\n\n"
             f"**Confidence:** {confidence}\n\n"
             f"**Limitation:** {limitation}"
         )
+        if missing_info:
+            base += f"\n\n**Missing Details / Recommended Next Inquiries:** {'; '.join(missing_info)}"
+        return base
 
     @staticmethod
-    def explain_text_with_lime(text: str, classifier, vectorizer, num_features: int = 6) -> Optional[Dict[str, Any]]:
+    def explain_text_with_lime(
+        text: str,
+        classifier: Any,
+        vectorizer: Any,
+        target_class: Optional[str] = None,
+        num_features: int = 8
+    ) -> Dict[str, Any]:
         """
         Generates Local Interpretable Model-agnostic Explanations (LIME) for symptom triage text.
+        Explains which tokens drove the classification toward or away from the target class.
         """
+        if not text or classifier is None or vectorizer is None:
+            return {
+                "available": False,
+                "predicted_label": "Unknown",
+                "weights": [],
+                "positive_weights": [],
+                "negative_weights": [],
+                "disclaimer": "LIME explanation unavailable due to missing text or model assets.",
+                "as_html": None
+            }
+
         try:
             from lime.lime_text import LimeTextExplainer
 
             class_names = list(classifier.classes_)
+
             def predict_fn(texts):
                 feats = vectorizer.transform(texts)
                 return classifier.predict_proba(feats)
 
-            explainer = LimeTextExplainer(class_names=class_names)
+            # Determine target class index
+            probs = predict_fn([text])[0]
+            if target_class and target_class in class_names:
+                target_idx = class_names.index(target_class)
+            else:
+                target_idx = int(np.argmax(probs))
+            predicted_label = class_names[target_idx]
+
+            explainer = LimeTextExplainer(
+                class_names=class_names,
+                bow=True,
+                split_expression=r"\W+",
+                random_state=42
+            )
             exp = explainer.explain_instance(
                 text,
                 predict_fn,
                 num_features=num_features,
-                labels=[0, 1, 2] if len(class_names) >= 3 else [0, 1]
+                labels=[target_idx]
             )
 
-            # Extract weights for the predicted top class
-            top_class_idx = int(np.argmax(predict_fn([text])[0]))
-            predicted_label = class_names[top_class_idx]
-            weights = exp.as_list(label=top_class_idx)
+            raw_weights = exp.as_list(label=target_idx)
+            pos_weights = [(w, score) for w, score in raw_weights if score > 0]
+            neg_weights = [(w, score) for w, score in raw_weights if score < 0]
 
             return {
                 "available": True,
                 "predicted_label": predicted_label,
-                "weights": weights,  # List of (word, score)
+                "target_class": predicted_label,
+                "weights": raw_weights,
+                "positive_weights": pos_weights,
+                "negative_weights": neg_weights,
+                "disclaimer": (
+                    "LIME highlights local lexical associations within the model's feature space "
+                    "for this text input. Token weights reflect statistical model behavior, not medical etiology or biological causation."
+                ),
                 "as_html": exp.as_html()
             }
-        except Exception as e:
+        except Exception:
             # Fallback to feature importance from vectorizer
-            return ExplainabilityEngine.fallback_word_importance(text, classifier, vectorizer, top_n=num_features)
+            return ExplainabilityEngine.fallback_word_importance(
+                text=text,
+                classifier=classifier,
+                vectorizer=vectorizer,
+                target_class=target_class,
+                top_n=num_features
+            )
 
     @staticmethod
-    def fallback_word_importance(text: str, classifier, vectorizer, top_n: int = 6) -> Dict[str, Any]:
+    def fallback_word_importance(
+        text: str,
+        classifier: Any,
+        vectorizer: Any,
+        target_class: Optional[str] = None,
+        top_n: int = 8
+    ) -> Dict[str, Any]:
         """
         Deterministic TF-IDF token weight fallback when LIME environment is constrained.
         """
         try:
             tokens = text.lower().split()
             vocab = vectorizer.vocabulary_
-            weights = []
-            classes = list(classifier.classes_)
-            
-            # Predict top class
-            feat = vectorizer.transform([text])
-            top_class_idx = int(np.argmax(classifier.predict_proba(feat)[0]))
-            predicted_label = classes[top_class_idx]
+            class_names = list(classifier.classes_)
 
-            coef = classifier.coef_[top_class_idx] if hasattr(classifier, "coef_") else None
+            feat = vectorizer.transform([text])
+            probs = classifier.predict_proba(feat)[0]
+
+            if target_class and target_class in class_names:
+                target_idx = class_names.index(target_class)
+            else:
+                target_idx = int(np.argmax(probs))
+            predicted_label = class_names[target_idx]
+
+            weights = []
+            # Check if underlying estimator has coef_
+            coef = None
+            if hasattr(classifier, "coef_"):
+                coef = classifier.coef_[target_idx]
+            elif hasattr(classifier, "calibrated_classifiers_") and len(classifier.calibrated_classifiers_) > 0:
+                base_est = classifier.calibrated_classifiers_[0].estimator
+                if hasattr(base_est, "coef_"):
+                    coef = base_est.coef_[target_idx]
+
             for token in set(tokens):
                 cleaned = "".join(c for c in token if c.isalnum())
                 if cleaned in vocab and coef is not None:
                     idx = vocab[cleaned]
                     score = float(coef[idx])
                     weights.append((cleaned, score))
+                elif cleaned in vocab:
+                    # Pure TF-IDF value fallback
+                    col_idx = vocab[cleaned]
+                    score = float(feat[0, col_idx])
+                    weights.append((cleaned, score))
 
             weights = sorted(weights, key=lambda x: abs(x[1]), reverse=True)[:top_n]
+            pos_weights = [(w, score) for w, score in weights if score > 0]
+            neg_weights = [(w, score) for w, score in weights if score < 0]
+
             return {
                 "available": True,
                 "predicted_label": predicted_label,
+                "target_class": predicted_label,
                 "weights": weights,
+                "positive_weights": pos_weights,
+                "negative_weights": neg_weights,
+                "disclaimer": (
+                    "Lexical alignment scores indicate feature contribution in the model's vocabulary space; "
+                    "they describe model classification behavior rather than clinical causation."
+                ),
                 "as_html": None
             }
         except Exception:
-            return {"available": False, "weights": [], "predicted_label": "Unknown", "as_html": None}
+            return {
+                "available": False,
+                "predicted_label": "Unknown",
+                "target_class": "Unknown",
+                "weights": [],
+                "positive_weights": [],
+                "negative_weights": [],
+                "disclaimer": "Feature importance calculation unavailable for this input.",
+                "as_html": None
+            }
 
     @staticmethod
     def explain_tabular_risk_factors(
@@ -99,33 +195,16 @@ class ExplainabilityEngine:
         contributing_factors: List[str]
     ) -> pd.DataFrame:
         """
-        Builds a structured feature attribution dataframe representing risk contribution.
+        Creates structured clinical risk factor explanation table.
         """
         data = []
-        for category, score in sub_scores.items():
+        for domain, score in sub_scores.items():
+            level = "Critical" if score >= 75 else "Elevated" if score >= 40 else "Low"
+            matching_factors = [f for f in contributing_factors if domain.lower() in f.lower()]
             data.append({
-                "Clinical Dimension": category.capitalize(),
-                "Risk Contribution Points": score,
-                "Percentage of Max": round((score / (30.0 if category == "symptoms" else 25.0 if category in ["vitals", "labs"] else 20.0)) * 100, 1)
+                "Risk Domain": domain,
+                "Domain Score": f"{score:.1f} / 100",
+                "Risk Level": level,
+                "Active Flags": "; ".join(matching_factors) if matching_factors else "Baseline"
             })
         return pd.DataFrame(data)
-
-    @staticmethod
-    def generate_shap_waterfall_data(sub_scores: Dict[str, float], base_score: float = 10.0) -> Dict[str, Any]:
-        """
-        Generates waterfall values suitable for Plotly SHAP-like attribution charts.
-        """
-        dimensions = ["Base Risk", "Symptoms", "Vitals", "Laboratory", "Radiology"]
-        values = [
-            base_score,
-            sub_scores.get("symptoms", 0.0),
-            sub_scores.get("vitals", 0.0),
-            sub_scores.get("labs", 0.0),
-            sub_scores.get("radiology", 0.0)
-        ]
-        measures = ["absolute", "relative", "relative", "relative", "relative"]
-        return {
-            "dimensions": dimensions,
-            "values": values,
-            "measures": measures
-        }

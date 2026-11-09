@@ -40,16 +40,17 @@ def generate_lime_text_explanation(
             random_state=42
         )
         
-        # Explain instance
+        # Target label should be the top-predicted class for this text
+        base_probs = predict_proba_fn([text])[0]
+        target_label = int(np.argmax(base_probs))
+        
+        # Explain instance for the predicted class
         exp = explainer.explain_instance(
             text,
             predict_proba_fn,
             num_features=num_features,
-            labels=[0, 1, 2] if len(class_names) >= 3 else [0]
+            labels=[target_label]
         )
-        
-        available_labels = exp.available_labels()
-        target_label = available_labels[0] if available_labels else 0
         raw_weights = exp.as_list(label=target_label)
         
         tokens = [item[0] for item in raw_weights]
