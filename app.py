@@ -236,7 +236,6 @@ def flush_session_data():
 with st.sidebar:
     st.image("https://img.icons8.com/color/96/caduceus.png", width=54)
     st.title("MediAssist")
-    st.caption("AI Clinical Decision Support System\nZelvora Industry Labs Capstone")
     st.markdown("---")
     
     # Wizard Navigation
