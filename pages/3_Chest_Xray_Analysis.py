@@ -16,6 +16,14 @@ from src.config import SAMPLE_XRAYS_DIR
 
 st.set_page_config(page_title="MediAssist — Chest X-Ray Analysis", page_icon="🩻", layout="wide")
 
+st.markdown("""
+<style>
+    div[data-testid="stSidebarNav"] ul li:first-child {
+        display: none;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 st.title("🩻 Chest X-Ray Screening & Grad-CAM Saliency")
 st.caption("Module B: Deep Learning Multi-Label Pulmonary Screening with Attention Heatmaps")
 

@@ -10,6 +10,14 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 st.set_page_config(page_title="MediAssist — Model Cards", page_icon="📜", layout="wide")
 
+st.markdown("""
+<style>
+    div[data-testid="stSidebarNav"] ul li:first-child {
+        display: none;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 st.title("📜 Model Cards & Transparency Documentation")
 st.caption("Module G: Standardized Healthcare Model Documentation following Mitchell et al. Guidelines")
 

@@ -16,6 +16,14 @@ from src.config import TRIAGE_MODEL_PATH, XRAY_MODEL_PATH
 
 st.set_page_config(page_title="MediAssist — Clinical Overview", page_icon="📊", layout="wide")
 
+st.markdown("""
+<style>
+    div[data-testid="stSidebarNav"] ul li:first-child {
+        display: none;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 st.title("📊 Clinical Overview & Executive Summary")
 st.caption("MediAssist Clinical Decision Support Platform — Cohort Monitoring")
 

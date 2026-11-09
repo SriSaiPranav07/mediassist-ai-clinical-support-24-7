@@ -18,6 +18,10 @@ st.set_page_config(
 # Custom CSS for polished clinical theme
 st.markdown("""
 <style>
+    /* Hide unconfigured app entry from Streamlit sidebar navigation */
+    div[data-testid="stSidebarNav"] ul li:first-child {
+        display: none;
+    }
     /* Professional Clinical Styling */
     .main {
         background-color: #f8fafc;
@@ -103,6 +107,21 @@ st.markdown("""
     MediAssist is developed strictly for educational, capstone, and research demonstration. It is <strong>NOT a certified medical device</strong> (FDA, CE, or CDSCO) and does <strong>not provide definitive clinical diagnoses or prescribe treatments</strong>. Every output must be reviewed and verified by a licensed healthcare professional.
 </div>
 """, unsafe_allow_html=True)
+
+st.markdown("### 🎯 Quick Module Launcher")
+col_nav1, col_nav2, col_nav3, col_nav4 = st.columns(4)
+with col_nav1:
+    if st.button("📊 Clinical Overview", use_container_width=True, type="primary"):
+        st.switch_page("pages/1_Clinical_Overview.py")
+with col_nav2:
+    if st.button("🩺 Symptom Triage", use_container_width=True):
+        st.switch_page("pages/2_Symptom_Triage.py")
+with col_nav3:
+    if st.button("🩻 Chest X-Ray", use_container_width=True):
+        st.switch_page("pages/3_Chest_Xray_Analysis.py")
+with col_nav4:
+    if st.button("🧪 Lab Interpreter", use_container_width=True):
+        st.switch_page("pages/4_Lab_Interpreter.py")
 
 st.markdown("### 🎯 System Navigation & Capabilities")
 st.markdown("""

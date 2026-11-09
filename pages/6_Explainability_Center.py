@@ -14,6 +14,14 @@ from src.utils import DEMO_PATIENTS, generate_anatomical_xray
 
 st.set_page_config(page_title="MediAssist — Explainability Center", page_icon="🔍", layout="wide")
 
+st.markdown("""
+<style>
+    div[data-testid="stSidebarNav"] ul li:first-child {
+        display: none;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 st.title("🔍 Clinical AI Explainability Center")
 st.caption("Module E: Comprehensive Interpretability Suite (LIME, Grad-CAM, Attribution, and 10-Second Explanations)")
 

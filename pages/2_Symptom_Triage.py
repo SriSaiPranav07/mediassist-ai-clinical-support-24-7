@@ -15,145 +15,219 @@ from src.config import EMERGENCY_CONTACT_INDIA
 
 st.set_page_config(page_title="MediAssist — Symptom Triage", page_icon="🩺", layout="wide")
 
+st.markdown("""
+<style>
+    div[data-testid="stSidebarNav"] ul li:first-child {
+        display: none;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 st.title("🩺 NLP Symptom Triage & Safety Screening")
 st.caption("Module A: Calibrated Symptom Urgency Classification with Red-Flag Safety Overrides")
 
 triage_engine = get_triage_engine()
 exp_engine = get_explainability_engine()
 
-# Demonstration Case Pre-filler
-st.markdown("#### ⚡ Quick Demonstration Case Selector")
-demo_options = ["Custom Input"] + [f"{p['id']} — {p['clinical_scenario']}" for p in DEMO_PATIENTS]
-selected_case = st.selectbox("Load sample patient presentation:", demo_options)
+# Helper to populate session state
+def set_triage_case(pt_id_or_custom: str):
+    if pt_id_or_custom == "Custom":
+        st.session_state["triage_narrative"] = ""
+        st.session_state["triage_duration"] = 1.0
+        st.session_state["triage_severity"] = 5
+        st.session_state["triage_age"] = 40
+        st.session_state["triage_hr"] = 80
+        st.session_state["triage_spo2"] = 98
+        st.session_state["triage_bp"] = 120
+    else:
+        pt = next((p for p in DEMO_PATIENTS if p["id"] == pt_id_or_custom), None)
+        if pt:
+            st.session_state["triage_narrative"] = pt["chief_complaint"]
+            st.session_state["triage_duration"] = float(pt["duration_days"])
+            st.session_state["triage_severity"] = int(pt["severity"])
+            st.session_state["triage_age"] = int(pt["age"])
+            v = pt.get("vitals", {})
+            st.session_state["triage_hr"] = int(v.get("HeartRate", 80))
+            st.session_state["triage_spo2"] = int(v.get("SpO2", 98))
+            st.session_state["triage_bp"] = int(v.get("SystolicBP", 120))
 
-prefill_text = ""
-prefill_duration = 2.0
-prefill_severity = 5
-prefill_age = 45
+# Initialize default to PT-001 so the page is ready with realistic clinical data
+if "triage_narrative" not in st.session_state:
+    set_triage_case("PT-001")
+    st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[0]['id']} — {DEMO_PATIENTS[0]['clinical_scenario']}"
 
-if selected_case != "Custom Input":
-    case_id = selected_case.split(" — ")[0]
-    matched_pt = next((p for p in DEMO_PATIENTS if p["id"] == case_id), None)
-    if matched_pt:
-        prefill_text = matched_pt["chief_complaint"]
-        prefill_duration = float(matched_pt["duration_days"])
-        prefill_severity = int(matched_pt["severity"])
-        prefill_age = int(matched_pt["age"])
+st.markdown("#### ⚡ Quick Demonstration Clinical Scenarios")
+st.write("Click any quick preset or choose from the full synthetic patient cohort:")
 
-# Input Form
-with st.form("triage_form"):
-    col_input, col_meta = st.columns([3, 1])
+# Quick Scenario Preset Buttons
+btn_col1, btn_col2, btn_col3, btn_col4, btn_col5 = st.columns(5)
+with btn_col1:
+    if st.button("🚨 STEMI / Heart Attack", use_container_width=True, help="Load 58yo male with acute crushing chest pressure"):
+        set_triage_case("PT-001")
+        st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[0]['id']} — {DEMO_PATIENTS[0]['clinical_scenario']}"
+        st.rerun()
+with btn_col2:
+    if st.button("🧠 Acute Stroke", use_container_width=True, help="Load 67yo female with unilateral weakness and slurred speech"):
+        set_triage_case("PT-005")
+        st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[4]['id']} — {DEMO_PATIENTS[4]['clinical_scenario']}"
+        st.rerun()
+with btn_col3:
+    if st.button("🫁 Severe Pneumonia", use_container_width=True, help="Load 42yo female with high fever and productive cough"):
+        set_triage_case("PT-002")
+        st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[1]['id']} — {DEMO_PATIENTS[1]['clinical_scenario']}"
+        st.rerun()
+with btn_col4:
+    if st.button("🤧 Viral Rhinovirus", use_container_width=True, help="Load 24yo male with mild runny nose and cough"):
+        set_triage_case("PT-004")
+        st.session_state["selected_demo_case"] = f"{DEMO_PATIENTS[3]['id']} — {DEMO_PATIENTS[3]['clinical_scenario']}"
+        st.rerun()
+with btn_col5:
+    if st.button("✍️ Custom / Clear", use_container_width=True, help="Clear inputs for manual typing"):
+        set_triage_case("Custom")
+        st.session_state["selected_demo_case"] = "Custom Input (Blank)"
+        st.rerun()
 
-    with col_input:
-        chief_complaint = st.text_area(
-            "Patient Chief Complaint / Symptom Narrative:",
-            value=prefill_text,
-            height=130,
-            placeholder="e.g., Patient describes severe chest pressure radiating to left arm with sweating for 1 hour..."
-        )
+# Full Dropdown Selector
+demo_options = [f"{p['id']} — {p['clinical_scenario']}" for p in DEMO_PATIENTS] + ["Custom Input (Blank)"]
 
-    with col_meta:
-        duration_days = st.number_input("Duration (Days):", min_value=0.05, max_value=365.0, value=prefill_duration, step=0.5)
-        severity_score = st.slider("Severity Scale (1-10):", min_value=1, max_value=10, value=prefill_severity)
-        patient_age = st.number_input("Patient Age:", min_value=0, max_value=120, value=prefill_age)
+def on_dropdown_change():
+    selected = st.session_state.get("selected_demo_case", "")
+    if selected == "Custom Input (Blank)":
+        set_triage_case("Custom")
+    else:
+        case_id = selected.split(" — ")[0]
+        set_triage_case(case_id)
 
-    # Optional Vitals
-    with st.expander("➕ Optional Vital Signs (for physiological red-flag check)", expanded=False):
-        c_hr, c_spo2, c_bp = st.columns(3)
-        with c_hr:
-            v_hr = st.number_input("Heart Rate (bpm):", min_value=30, max_value=250, value=80)
-        with c_spo2:
-            v_spo2 = st.number_input("SpO2 (%):", min_value=50, max_value=100, value=98)
-        with c_bp:
-            v_sys = st.number_input("Systolic BP (mmHg):", min_value=50, max_value=260, value=120)
+st.selectbox(
+    "Or select a patient cohort profile:",
+    options=demo_options,
+    key="selected_demo_case",
+    on_change=on_dropdown_change
+)
 
-    submit_triage = st.form_submit_button("Run Triage Screening 🔍", type="primary")
+st.markdown("---")
 
-if submit_triage or prefill_text != "":
-    vitals_dict = {"HeartRate": v_hr, "SpO2": v_spo2, "SystolicBP": v_sys}
-    result = triage_engine.classify_symptoms(
-        chief_complaint=chief_complaint,
-        duration_days=duration_days,
-        severity_score=severity_score,
-        patient_age=patient_age,
-        vital_signs=vitals_dict
+# Input Section
+col_input, col_meta = st.columns([3, 1])
+
+with col_input:
+    chief_complaint = st.text_area(
+        "Patient Chief Complaint / Symptom Narrative:",
+        key="triage_narrative",
+        height=140,
+        placeholder="Describe symptoms in plain clinical language (e.g., Patient describes severe chest pressure radiating to left arm with sweating for 1 hour...)"
     )
 
-    st.markdown("---")
+with col_meta:
+    duration_days = st.number_input("Duration (Days):", key="triage_duration", min_value=0.01, max_value=365.0, step=0.5)
+    severity_score = st.slider("Severity Scale (1-10):", key="triage_severity", min_value=1, max_value=10)
+    patient_age = st.number_input("Patient Age:", key="triage_age", min_value=0, max_value=120)
 
-    # Display Priority Results
-    urgency = result["urgency_category"]
-    badge_color = {
-        "Emergency Warning": "error",
-        "Urgent Assessment": "warning",
-        "Routine Assessment": "success",
-        "Insufficient Information": "info"
-    }.get(urgency, "info")
+# Optional Vitals
+with st.expander("➕ Physiological Vital Signs (for vital-sign red-flag detection)", expanded=True):
+    c_hr, c_spo2, c_bp = st.columns(3)
+    with c_hr:
+        v_hr = st.number_input("Heart Rate (bpm):", key="triage_hr", min_value=30, max_value=250)
+    with c_spo2:
+        v_spo2 = st.number_input("SpO2 (%):", key="triage_spo2", min_value=50, max_value=100)
+    with c_bp:
+        v_sys = st.number_input("Systolic BP (mmHg):", key="triage_bp", min_value=50, max_value=260)
 
-    if urgency == "Emergency Warning":
-        st.error(f"### 🚨 Urgency Category: {urgency.upper()}")
-        st.error(f"**CRITICAL ADVISORY:** {result['action_advisory']}")
-    elif urgency == "Urgent Assessment":
-        st.warning(f"### ⚠️ Urgency Category: {urgency}")
-        st.write(f"**Advisory:** {result['action_advisory']}")
-    elif urgency == "Routine Assessment":
-        st.success(f"### 🟢 Urgency Category: {urgency}")
-        st.write(f"**Advisory:** {result['action_advisory']}")
+run_button = st.button("Run Triage Screening 🔍", type="primary", use_container_width=False)
+
+# Evaluation trigger: run if button clicked or if narrative is non-empty
+if run_button or (chief_complaint and chief_complaint.strip()):
+    if not chief_complaint or not chief_complaint.strip():
+        st.warning("⚠️ Please provide a symptom description or click one of the quick scenario buttons above.")
     else:
-        st.info(f"### ℹ️ Urgency Category: {urgency}")
+        vitals_dict = {"HeartRate": v_hr, "SpO2": v_spo2, "SystolicBP": v_sys}
+        result = triage_engine.classify_symptoms(
+            chief_complaint=chief_complaint,
+            duration_days=duration_days,
+            severity_score=severity_score,
+            patient_age=patient_age,
+            vital_signs=vitals_dict
+        )
 
-    # Mandatory 10-Second Clinician Explanation
-    st.markdown("### ⏱️ Clinician Explanation (10-Second Summary)")
-    exp = result["explanation"]
-    st.markdown(f"""
-    > **Finding:** {exp['finding']}  
-    > **Reason:** {exp['reason']}  
-    > **Confidence:** {exp['confidence']}  
-    > **Limitation:** {exp['limitation']}
-    """)
+        st.markdown("---")
 
-    # Supporting Diagnostics & Explainability
-    c_probs, c_lime = st.columns([1, 1])
-
-    with c_probs:
-        st.subheader("📊 Class Probability Distribution")
-        probs = result.get("probabilities", {})
-        if probs:
-            prob_df = [{"Category": k, "Probability": v} for k, v in probs.items()]
-            fig = px.bar(
-                prob_df,
-                x="Probability",
-                y="Category",
-                orientation="h",
-                text_auto=".2%",
-                range_x=[0, 1],
-                color="Category",
-                color_discrete_map={
-                    "Emergency Warning": "#ef4444",
-                    "Urgent Assessment": "#f59e0b",
-                    "Routine Assessment": "#10b981"
-                }
-            )
-            fig.update_layout(height=240, margin=dict(l=10, r=10, t=10, b=10))
-            st.plotly_chart(fig, use_container_width=True)
-
-    with c_lime:
-        st.subheader("🔍 Local Keyword Importance (LIME)")
-        if triage_engine.model is not None and triage_engine.vectorizer is not None and chief_complaint:
-            lime_res = exp_engine.explain_text_with_lime(chief_complaint, triage_engine.model, triage_engine.vectorizer)
-            if lime_res and lime_res.get("weights"):
-                lime_df = [{"Token": w[0], "Weight": round(w[1], 4)} for w in lime_res["weights"]]
-                fig_lime = px.bar(
-                    lime_df,
-                    x="Weight",
-                    y="Token",
-                    orientation="h",
-                    color="Weight",
-                    color_continuous_scale="RdBu_r"
-                )
-                fig_lime.update_layout(height=240, margin=dict(l=10, r=10, t=10, b=10))
-                st.plotly_chart(fig_lime, use_container_width=True)
-            else:
-                st.caption("No significant vocabulary weights detected in current input.")
+        # Display Priority Results
+        urgency = result["urgency_category"]
+        if urgency == "Emergency Warning":
+            st.error(f"### 🚨 Urgency Category: {urgency.upper()}")
+            st.error(f"**CRITICAL ADVISORY:** {result['action_advisory']}")
+            if result.get("emergency_contact"):
+                st.error(f"📞 Immediate Emergency Contact: Dial **{result['emergency_contact']}** (National Emergency Services)")
+        elif urgency == "Urgent Assessment":
+            st.warning(f"### ⚠️ Urgency Category: {urgency}")
+            st.write(f"**Clinical Advisory:** {result['action_advisory']}")
+        elif urgency == "Routine Assessment":
+            st.success(f"### 🟢 Urgency Category: {urgency}")
+            st.write(f"**Clinical Advisory:** {result['action_advisory']}")
         else:
-            st.caption("Model explanation engine waiting for input.")
+            st.info(f"### ℹ️ Urgency Category: {urgency}")
+            st.write(f"**Advisory:** {result['action_advisory']}")
+
+        if result.get("safety_override"):
+            st.error(f"🛡️ **Deterministic Safety Override Engaged:** Flagged critical finding: `{', '.join(result.get('red_flags', []))}`. Statistical probability override enforced to protect patient life.")
+
+        # Identified keywords
+        if result.get("identified_symptoms"):
+            st.markdown(f"**Identified Clinical Keywords:** `{', '.join(result['identified_symptoms'])}`")
+
+        # Mandatory 10-Second Clinician Explanation
+        st.markdown("### ⏱️ Clinician Explanation (10-Second Summary)")
+        exp = result["explanation"]
+        st.markdown(f"""
+        > **Finding:** {exp['finding']}  
+        > **Reason:** {exp['reason']}  
+        > **Confidence:** {exp['confidence']}  
+        > **Limitation:** {exp['limitation']}
+        """)
+
+        # Supporting Diagnostics & Explainability
+        c_probs, c_lime = st.columns([1, 1])
+
+        with c_probs:
+            st.subheader("📊 Class Probability Distribution")
+            probs = result.get("probabilities", {})
+            if probs:
+                prob_df = [{"Category": k, "Probability": v} for k, v in probs.items()]
+                fig = px.bar(
+                    prob_df,
+                    x="Probability",
+                    y="Category",
+                    orientation="h",
+                    text_auto=".2%",
+                    range_x=[0, 1],
+                    color="Category",
+                    color_discrete_map={
+                        "Emergency Warning": "#ef4444",
+                        "Urgent Assessment": "#f59e0b",
+                        "Routine Assessment": "#10b981"
+                    }
+                )
+                fig.update_layout(height=240, margin=dict(l=10, r=10, t=10, b=10))
+                st.plotly_chart(fig, use_container_width=True)
+
+        with c_lime:
+            st.subheader("🔍 Local Keyword Importance (LIME)")
+            if triage_engine.model is not None and triage_engine.vectorizer is not None and chief_complaint:
+                with st.spinner("Calculating LIME token attributions..."):
+                    lime_res = exp_engine.explain_text_with_lime(chief_complaint, triage_engine.model, triage_engine.vectorizer)
+                if lime_res and lime_res.get("weights"):
+                    lime_df = [{"Token": w[0], "Weight": round(w[1], 4)} for w in lime_res["weights"]]
+                    fig_lime = px.bar(
+                        lime_df,
+                        x="Weight",
+                        y="Token",
+                        orientation="h",
+                        color="Weight",
+                        color_continuous_scale="RdBu_r"
+                    )
+                    fig_lime.update_layout(height=240, margin=dict(l=10, r=10, t=10, b=10))
+                    st.plotly_chart(fig_lime, use_container_width=True)
+                else:
+                    st.caption("No significant vocabulary weights detected in current input.")
+            else:
+                st.caption("Model explanation engine waiting for input.")

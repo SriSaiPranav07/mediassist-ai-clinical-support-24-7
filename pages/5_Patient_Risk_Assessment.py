@@ -23,6 +23,14 @@ from src.config import SAMPLE_XRAYS_DIR
 
 st.set_page_config(page_title="MediAssist — Patient Risk Assessment", page_icon="⚖️", layout="wide")
 
+st.markdown("""
+<style>
+    div[data-testid="stSidebarNav"] ul li:first-child {
+        display: none;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 st.title("⚖️ Composite Patient Risk Scoring & Prioritization")
 st.caption("Module D: Multi-Modal Prioritization Engine with Deterministic Emergency Overrides")
 

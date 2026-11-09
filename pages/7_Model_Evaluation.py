@@ -16,6 +16,14 @@ from src.config import MODELS_DIR
 
 st.set_page_config(page_title="MediAssist — Model Evaluation", page_icon="📈", layout="wide")
 
+st.markdown("""
+<style>
+    div[data-testid="stSidebarNav"] ul li:first-child {
+        display: none;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 st.title("📈 Model Evaluation & Empirical Benchmark Report")
 st.caption("Module F: Measured Test-Split Metrics, Multi-Label Diagnostic Curves & Error Auditing")
 
