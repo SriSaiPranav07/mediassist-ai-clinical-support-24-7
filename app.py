@@ -30,7 +30,11 @@ from utils.xai_visuals import (
     generate_lime_text_explanation,
     render_xai_comparison_columns
 )
-from utils.pdf_generator import generate_clinical_summary_pdf
+try:
+    from utils.pdf_generator import generate_clinical_summary_pdf
+except Exception:
+    def generate_clinical_summary_pdf(*args, **kwargs):
+        return b"PDF export unavailable."
 from src.utils import DEMO_PATIENTS
 from src.config import LAB_REFERENCE_RANGES, EMERGENCY_CONTACT_INDIA
 

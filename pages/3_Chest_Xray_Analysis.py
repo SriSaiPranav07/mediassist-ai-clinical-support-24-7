@@ -23,7 +23,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
-sys.path.append(str(Path(__file__).resolve().parent.parent))
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
 from src.model_loader import get_xray_screener
 from src.config import SAMPLE_XRAYS_DIR, XRAY_CLASSES, EMERGENCY_CONTACT_INDIA, MODELS_DIR
@@ -32,7 +34,11 @@ from src.multimodal_integration import MultimodalClinicalIntegrator
 from src.data_validation import validate_vital_signs
 from src.utils import DEMO_PATIENTS
 from utils.data_processing import validate_radiograph_image
-from utils.pdf_generator import generate_multimodal_xray_pdf
+try:
+    from utils.pdf_generator import generate_multimodal_xray_pdf
+except Exception:
+    def generate_multimodal_xray_pdf(report):
+        return b"PDF export unavailable."
 
 st.set_page_config(
     page_title="MediAssist — Multimodal Chest X-Ray & Symptom Analysis",
