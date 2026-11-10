@@ -3,7 +3,7 @@
 ## 1. System Details
 - **System Name:** MediAssist
 - **Version:** 1.0.0
-- **Organization:** Zelvora Technologies Pvt. Ltd. / Zelvora Industry Labs (Week 4 AI Capstone)
+- **Organization:** MediAssist Clinical AI Team
 - **Release Date:** October 2026
 - **License:** MIT License
 

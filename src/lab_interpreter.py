@@ -1,6 +1,6 @@
 """
 MediAssist - Laboratory Result Interpreter & Critical Alert Engine
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 Reference Sources: Tietz Clinical Guide to Laboratory Tests, 4th Ed; Harrison's Internal Medicine, 21st Ed.
 """
 from typing import Dict, Any, List, Optional, Tuple

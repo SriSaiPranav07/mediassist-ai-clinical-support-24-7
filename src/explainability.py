@@ -1,6 +1,6 @@
 """
 MediAssist - Explainability Center (LIME, SHAP, and AI Clinical Decision Support Summaries)
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 from typing import Dict, Any, List, Optional, Tuple
 import numpy as np

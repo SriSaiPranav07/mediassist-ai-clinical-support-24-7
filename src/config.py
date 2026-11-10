@@ -1,6 +1,6 @@
 """
 MediAssist - Configuration & Clinical Reference Knowledge Base
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 from pathlib import Path
 

@@ -1,6 +1,6 @@
 """
 MediAssist - Symptom Triage NLP Training Pipeline
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 
 Enhanced Training Pipeline:
   - Balanced dataset across Emergency Warning, Urgent Assessment, and Routine Assessment.

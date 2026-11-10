@@ -1,7 +1,7 @@
 """
 MediAssist - Medical Guideline RAG (Retrieval-Augmented Generation) Engine
 Retrieves authoritative clinical practice guidelines and synthesizes evidence-grounded recommendations.
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 import json
 from pathlib import Path

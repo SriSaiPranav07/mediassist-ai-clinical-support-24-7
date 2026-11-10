@@ -1,6 +1,6 @@
 """
 MediAssist - Model Evaluation, Performance Metrics & Boundary Testing
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 from typing import Dict, Any, List, Tuple
 import numpy as np

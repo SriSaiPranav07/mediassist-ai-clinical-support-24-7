@@ -105,7 +105,7 @@ with tab_cv:
 
 # TAB 3: 10-SECOND CLINICIAN EXPLANATIONS
 with tab_summary:
-    st.subheader("Mandatory Mentor Capstone Challenge: 10-Second Explanations")
+    st.subheader("Clinician Decision Support: 10-Second Explanations")
     st.markdown("""
     Every AI and rule-generated decision in MediAssist adheres strictly to a standardized 4-part structure that a physician can read and assimilate in under 10 seconds:
     """)

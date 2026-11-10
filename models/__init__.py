@@ -1,7 +1,7 @@
 """
 MediAssist Models Module
 Encapsulates model loading and inference logic with Streamlit caching.
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 from typing import Optional
 import streamlit as st

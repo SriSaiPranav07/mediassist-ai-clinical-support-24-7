@@ -1,6 +1,6 @@
 """
 MediAssist - Laboratory Result Interpreter & Critical Value Alerts
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 from typing import Dict, Any, List, Optional
 from src.config import LAB_REFERENCE_RANGES

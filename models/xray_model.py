@@ -1,6 +1,6 @@
 """
 MediAssist - Chest X-Ray Transfer Screening & Grad-CAM Analysis
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 from typing import Dict, Any, List, Optional, Tuple
 import io

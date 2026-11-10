@@ -1,6 +1,6 @@
 """
 MediAssist - Composite Patient Risk Scoring & Transparent Priority Engine
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 from typing import Dict, Any, List, Optional, Tuple
 from datetime import datetime

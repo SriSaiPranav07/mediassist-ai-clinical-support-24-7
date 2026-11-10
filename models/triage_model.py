@@ -1,6 +1,6 @@
 """
 MediAssist - Symptom Triage Model & Safety Screening
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 
 Provides the modular SymptomTriageModel wrapping the Hybrid Clinical Triage Architecture.
 """

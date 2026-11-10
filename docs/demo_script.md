@@ -10,7 +10,7 @@
 ### Segment 1: Project Overview & Problem Statement [0:00 - 0:30]
 - **Visual:** Display Streamlit landing page with the MediAssist banner and the safety disclaimer.
 - **Narrator Speech:**  
-  *"Hello everyone. Welcome to MediAssist — a multi-model AI clinical decision support system built for the Zelvora Industry Labs AI Capstone. Hospital emergency departments and triage units face severe diagnostic bottlenecks. MediAssist demonstrates how multiple specialized AI models — natural language processing, deep computer vision, and expert laboratory rules — can synthesize clinical data into actionable, explainable insights while enforcing strict patient safety overrides. Importantly, MediAssist is an educational research demonstration, not a standalone diagnostic device."*
+  *"Hello everyone. Welcome to MediAssist — a multi-model AI clinical decision support system. Hospital emergency departments and triage units face severe diagnostic bottlenecks. MediAssist demonstrates how multiple specialized AI models — natural language processing, deep computer vision, and expert laboratory rules — can synthesize clinical data into actionable, explainable insights while enforcing strict patient safety overrides. Importantly, MediAssist is an educational research demonstration, not a standalone diagnostic device."*
 
 ---
 

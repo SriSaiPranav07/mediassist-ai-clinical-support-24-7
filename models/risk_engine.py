@@ -1,6 +1,6 @@
 """
 MediAssist - Composite Patient Risk Scoring & Transparent Prioritization
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 from typing import Dict, Any, List, Optional
 from src.config import TRIAGE_EMERGENCY, TRIAGE_URGENT, TRIAGE_ROUTINE

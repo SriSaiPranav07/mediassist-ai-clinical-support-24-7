@@ -1,6 +1,6 @@
 """
 MediAssist - Helper Utilities, Synthetic Clinical Case Generator, and Image Generators
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 import io
 import json

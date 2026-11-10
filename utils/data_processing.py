@@ -1,6 +1,6 @@
 """
 MediAssist - Data Processing, Validation & Zero-Retention Security
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 import io
 import gc

@@ -34,7 +34,7 @@ with mc_tabs[0]:
     ## MediAssist System-Level Model Card (v1.0.0)
 
     ### 1. System Summary
-    **MediAssist** is a multi-model clinical decision support demonstration platform developed for the Zelvora Industry Labs AI Capstone. It integrates natural language symptom triage, deep learning chest radiograph screening, expert laboratory interpretation, and transparent patient risk prioritization.
+    **MediAssist** is a multi-model clinical decision support demonstration platform. It integrates natural language symptom triage, deep learning chest radiograph screening, expert laboratory interpretation, and transparent patient risk prioritization.
 
     ### 2. Intended Use
     - **Primary Purpose:** Educational training, clinical research workflow demonstration, and simulated triage queue prioritization.

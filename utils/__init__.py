@@ -13,7 +13,7 @@ from .xai_visuals import (
     generate_gradcam_overlay,
     render_xai_comparison_columns
 )
-from .pdf_generator import generate_clinical_summary_pdf
+from .pdf_generator import generate_clinical_summary_pdf, generate_multimodal_xray_pdf
 
 __all__ = [
     "validate_symptom_narrative",
@@ -23,5 +23,6 @@ __all__ = [
     "generate_lime_text_explanation",
     "generate_gradcam_overlay",
     "render_xai_comparison_columns",
-    "generate_clinical_summary_pdf"
+    "generate_clinical_summary_pdf",
+    "generate_multimodal_xray_pdf"
 ]

@@ -1,6 +1,6 @@
 """
 MediAssist - Robust Data Validation and Safety Sanitation
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 from typing import Dict, Any, Tuple, Optional, List
 import io

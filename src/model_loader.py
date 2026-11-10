@@ -1,6 +1,6 @@
 """
 MediAssist - Model Loader & Singleton Caching
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 import functools
 from typing import Optional

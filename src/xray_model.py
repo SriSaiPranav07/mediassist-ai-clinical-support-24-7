@@ -1,6 +1,6 @@
 """
 MediAssist - Chest X-Ray Screening CNN & Grad-CAM Visual Explainability
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 import io
 import os

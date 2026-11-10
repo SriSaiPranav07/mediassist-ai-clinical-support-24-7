@@ -1,7 +1,7 @@
 """
 MediAssist — AI Clinical Decision Support System 🩺
 Main Application Entry Point & Multi-Step Clinical Wizard
-Zelvora Technologies Pvt. Ltd. / Zelvora Industry Labs AI Capstone
+MediAssist Clinical AI Team
 """
 import io
 import time

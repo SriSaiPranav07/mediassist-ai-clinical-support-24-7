@@ -1,6 +1,6 @@
 """
 MediAssist - Chest X-Ray CNN Training Pipeline
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 Trains MobileNetV2 transfer learning model on radiograph cohort.
 """
 import os

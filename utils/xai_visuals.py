@@ -1,7 +1,7 @@
 """
 MediAssist - Explainable AI (XAI) Visualizations
 LIME Token Attribution & Grad-CAM Anatomical Saliency
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 """
 import io
 from typing import Dict, Any, List, Optional, Tuple

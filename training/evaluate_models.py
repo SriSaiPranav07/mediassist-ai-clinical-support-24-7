@@ -1,6 +1,6 @@
 """
 MediAssist - Comprehensive System Evaluation & Benchmark Runner
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 Runs validation benchmarks across all 4 clinical modules and generates evaluation artifacts.
 """
 import json

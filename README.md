@@ -9,7 +9,7 @@ Multi-model healthcare AI for symptom triage, chest X-ray abnormality screening,
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Tests: 26 Passed](https://img.shields.io/badge/Pytest-26%20Passed-brightgreen.svg)]()
 
-> **Zelvora Technologies Pvt. Ltd. / Zelvora Industry Labs — Week 4 AI Capstone Project**  
+> **MediAssist Clinical Decision Support System**  
 > **Repository:** [SriSaiPranav07/mediassist-ai-clinical-support-24-7](https://github.com/SriSaiPranav07/mediassist-ai-clinical-support-24-7)
 
 ---
@@ -285,6 +285,5 @@ To deploy this project to Streamlit Community Cloud:
 ---
 
 ## 👥 Credits & Acknowledgments
-- **Capstone Initiative:** Zelvora Technologies Pvt. Ltd. / Zelvora Industry Labs (Week 4 AI Capstone).
+- **Project Initiative:** MediAssist Clinical Decision Support System
 - **Clinical References:** Tietz Clinical Guide to Laboratory Tests (4th Ed.), Harrison's Principles of Internal Medicine (21st Ed.), Manchester Triage System.
->>>>>>> fc7474e (feat: complete MediAssist AI Clinical Decision Support System with trained models, Grad-CAM, LIME, and tests)

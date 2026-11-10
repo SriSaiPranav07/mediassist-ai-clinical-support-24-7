@@ -1,6 +1,6 @@
 """
 MediAssist - Clinical Guardrails & Safety Engine
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 
 Provides an independent, rule-based clinical safety net for symptom triage:
   1. ClinicalNarrativeParser:

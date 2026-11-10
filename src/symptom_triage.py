@@ -1,6 +1,6 @@
 """
 MediAssist - Hybrid Clinical Triage Architecture
-Author: Zelvora Industry Labs / MediAssist Team
+Author: MediAssist Clinical AI Team
 
 Architecture & Priority Order:
   1. Priority 1: Emergency Warning (Deterministic Clinical Red-Flag Override)
